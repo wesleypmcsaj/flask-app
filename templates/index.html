@@ -54,9 +54,9 @@
                     // Verifica se o QR code já foi escaneado antes
                     if (!scannedCodes.has(qrContent)) {
                         scannedCodes.add(qrContent);
-                        sendToGoogleSheets(qrContent);
+                        sendToFlaskApp(qrContent);
                     } else {
-                        messageElement.textContent = `QR Code Já escaneado: ${qrContent}`;
+                        messageElement.textContent = `QR Code already scanned: ${qrContent}`;
                     }
                 }
                 if (err && !(err instanceof ZXing.NotFoundException)) {
@@ -71,20 +71,19 @@
             messageElement.textContent = 'Camera stopped';
         });
 
-        // Função para enviar o conteúdo do QR code para a planilha Google
-        function sendToGoogleSheets(qrData) {
+        // Função para enviar o conteúdo do QR code para o servidor Flask
+        function sendToFlaskApp(qrData) {
             fetch('https://flask-app-s9sv.onrender.com', {
                 method: 'POST',
-                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({data: qrData})
             }).then(() => {
-                messageElement.textContent = `QR Code enviado para o Google Planilhas: ${qrData}`;
+                messageElement.textContent = `QR Code sent to Flask App: ${qrData}`;
             }).catch(error => {
                 console.error('Error:', error);
-                messageElement.textContent = 'Erro ao enviar as informações para o planilhas Google';
+                messageElement.textContent = 'Error sending data to Flask App';
             });
         }
 
