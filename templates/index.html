@@ -1,90 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Reader</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        video {
-            width: 100%;
-            max-width: 400px;
-            margin: 20px auto;
-            display: block;
-        }
-        #message {
-            margin: 20px;
-            font-size: 1.2em;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-        }
-    </style>
+    <title>QR Code Scanner</title>
+    <script src="https://unpkg.com/@zxing/library@latest"></script>
 </head>
 <body>
     <h1>QR Code Scanner</h1>
-    <video id="video" playsinline></video>
-    <p id="message">Point the camera at a QR Code</p>
-    <button id="stopButton">Stop Camera</button>
+    <video id="video" width="100%" height="auto" style="border: 1px solid black;"></video>
+    <div id="result"></div>
 
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@zxing/library@0.18.6/umd/index.min.js"></script>
     <script>
-        const codeReader = new ZXing.BrowserQRCodeReader();
-        const videoElement = document.getElementById('video');
-        const messageElement = document.getElementById('message');
+        const resultElement = document.getElementById('result');
 
-        // Função para iniciar a câmera traseira do celular
-        function startCamera() {
-            codeReader.decodeFromVideoDevice(null, videoElement, (result, err) => {
-                if (result) {
-                    let qrContent = result.text;
-                    messageElement.textContent = `QR Code detected: ${qrContent}`;
-                    sendToServer(qrContent);
+        function enviarDados(data) {
+            fetch("https://flask-app-nu-two.vercel.app", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(responseData => {
+                if (responseData.success) {
+                    resultElement.innerText += ` - Enviado: ${data.data}, Resposta: ${responseData.message}`;
+                } else {
+                    resultElement.innerText += ` - Erro ao enviar ${data.data}: ${responseData.message}`;
                 }
-                if (err && !(err instanceof ZXing.NotFoundException)) {
-                    console.error(err);
-                }
+            })
+            .catch(error => {
+                resultElement.innerText += ` - Erro ao enviar ${data.data}: ${error.message}`;
             });
         }
 
-        // Função para parar a leitura do QR code e câmera
-        document.getElementById('stopButton').addEventListener('click', () => {
-            codeReader.reset();
-            messageElement.textContent = 'Camera stopped';
-        });
+        // Enviar dado "OF 7777" assim que a página carregar
+        window.onload = () => {
+            resultElement.innerText = "Enviando 'OF 7777'...";
+            enviarDados({ data: "OF 7777" });
 
-        // Função para enviar o conteúdo do QR code para o servidor Flask
-        function sendToServer(qrData) {
-            fetch('https://flask-app-git-main-wesleypmcsajs-projects.vercel.app', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({data: qrData})
-            }).then(response => response.json())
-              .then(data => {
-                  messageElement.textContent = data.message;
-              })
-              .catch(error => {
-                  console.error('Error:', error);
-                  messageElement.textContent = 'Error sending data to server';
-              });
-        }
+            // Após 10 segundos, enviar "CI 7777"
+            setTimeout(() => {
+                resultElement.innerText += "\nEnviando 'CI 7777'...";
+                enviarDados({ data: "CI 7777" });
+            }, 10000);
+        };
 
-        // Iniciar a câmera ao carregar a página
-        window.addEventListener('load', () => {
-            startCamera();
-        });
+        // Inicializar o leitor de QR Code
+        const codeReader = new ZXing.BrowserQRCodeReader();
+        const videoElement = document.getElementById('video');
+
+        codeReader
+            .decodeFromVideoDevice(null, videoElement, (result, error) => {
+                if (result) {
+                    const qrData = result.text.trim();
+                    resultElement.innerText += `\nQR Code lido: ${qrData}`;
+                    enviarDados({ data: qrData });
+                }
+                if (error) {
+                    console.error(error);
+                }
+            })
+            .catch(err => console.error(err));
     </script>
 </body>
 </html>
