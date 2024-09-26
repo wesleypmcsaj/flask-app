@@ -5,7 +5,9 @@ from oauth2client.service_account import ServiceAccountCredentials
 from flask_cors import CORS  # Importando a biblioteca Flask-CORS
 
 app = Flask(__name__)
-CORS(app)  # Habilitando CORS para permitir requisições de origens diferentes
+
+# Configure o CORS para permitir origens específicas
+CORS(app, resources={r"/*": {"origins": ["https://flask-app-blush-one.vercel.app", "https://flask-app-psi-red.vercel.app"]}})
 
 # Configurações de autenticação para acessar a planilha Google
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
