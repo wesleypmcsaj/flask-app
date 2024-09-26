@@ -2,8 +2,10 @@ from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from flask_cors import CORS  # Importando a biblioteca Flask-CORS
 
 app = Flask(__name__)
+CORS(app)  # Habilitando CORS para permitir requisições de origens diferentes
 
 # Configurações de autenticação para acessar a planilha Google
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
