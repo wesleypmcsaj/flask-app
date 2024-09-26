@@ -20,10 +20,8 @@ google_api_key = os.getenv('GOOGLE_API_KEY')  # Obtendo a chave da variável de 
 # você deve garantir que ela seja usada corretamente aqui.
 # Caso você ainda precise do arquivo JSON para credenciais,
 # ele deverá estar presente no seu repositório ou no ambiente onde o app é executado.
-creds = ServiceAccountCredentials.from_json_keyfile_name('copia-arquivos-para-o-gdrive-9d3fd7c778f6.json',
-                                                         scope)  # Substitua pelo caminho do seu arquivo JSON
+creds = ServiceAccountCredentials.from_json_keyfile_name('copia-arquivos-para-o-gdrive-9d3fd7c778f6.json', scope)  # Substitua pelo caminho do seu arquivo JSON
 client = gspread.authorize(creds)
-
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -74,7 +72,6 @@ def index():
 
         except Exception as e:
             return jsonify({'success': False, 'message': str(e)})
-
 
 if __name__ == '__main__':
     app.run(debug=False)
