@@ -4,7 +4,5 @@ Flask==1.1.2
 Jinja2==2.11.3
 MarkupSafe==1.1.1
 itsdangerous==2.0.1
-
-
-
-
+gspread==5.0.0  # ou a versão mais recente
+oauth2client==4.1.3  # ou a versão mais recente
