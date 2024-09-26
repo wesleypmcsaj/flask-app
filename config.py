@@ -1,0 +1,2 @@
+# config.py
+GOOGLE_API_KEY = '020b7ab8ef94888c2113c9928ee2d4f7895b56b7'
