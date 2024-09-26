@@ -3,6 +3,8 @@ from datetime import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from flask_cors import CORS
+from config import GOOGLE_API_KEY
+
 
 app = Flask(__name__)
 
