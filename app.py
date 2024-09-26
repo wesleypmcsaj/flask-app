@@ -7,7 +7,14 @@ from flask_cors import CORS  # Importando a biblioteca Flask-CORS
 app = Flask(__name__)
 
 # Configure o CORS para permitir origens específicas
-CORS(app, resources={r"/*": {"origins": ["https://flask-app-blush-one.vercel.app", "https://flask-app-psi-red.vercel.app"]}})
+# Adicionando todos os links de acesso permitidos no CORS
+CORS(app, resources={r"/*": {"origins": [
+    "https://flask-app-blush-one.vercel.app", 
+    "https://flask-app-psi-red.vercel.app",
+    "https://flask-app-tau-wheat.vercel.app",
+    "https://flask-app-git-main-wesleypmcsajs-projects.vercel.app",
+    "https://flask-cfzfcqkw3-wesleypmcsajs-projects.vercel.app"
+]}})
 
 # Configurações de autenticação para acessar a planilha Google
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
