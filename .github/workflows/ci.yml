@@ -18,4 +18,4 @@ jobs:
         run: |
           echo "Using Google API Key"
           # Comando para executar seu script ou comando que precisa da chave
-          python seu_script.py  # Por exemplo, executar um script Python
+          python app.py  # Por exemplo, executar um script Python
