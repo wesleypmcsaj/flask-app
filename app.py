@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 # Configurações de autenticação para acessar a planilha Google
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-creds = ServiceAccountCredentials.from_json_keyfile_name('path/to/your/service_account.json', scope)  # Substitua pelo caminho do seu arquivo JSON
+creds = ServiceAccountCredentials.from_json_keyfile_name('copia-arquivos-para-o-gdrive-9d3fd7c778f6.json', scope)  # Substitua pelo caminho do seu arquivo JSON
 client = gspread.authorize(creds)
 
 @app.route('/', methods=['GET', 'POST'])
