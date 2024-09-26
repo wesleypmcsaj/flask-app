@@ -1,0 +1,21 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use Google API Key
+        env:
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}  # Referencia o secret aqui
+        run: |
+          echo "Using Google API Key"
+          # Comando para executar seu script ou comando que precisa da chave
+          python seu_script.py  # Por exemplo, executar um script Python
