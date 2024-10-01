@@ -1,9 +1,9 @@
-import os
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from flask_cors import CORS
+import os
 import json
 
 app = Flask(__name__)
@@ -11,14 +11,17 @@ app = Flask(__name__)
 # Permitir CORS de qualquer origem
 CORS(app)
 
-# Carregar credenciais do Google a partir da variável de ambiente
-GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')  # Carrega o Secret do GitHub como variável de ambiente
+# Carregar as credenciais do Google a partir dos secrets do GitHub
+GOOGLE_CREDENTIALS_JSON = os.getenv("GOOGLE_CREDENTIALS_JSON")
+
+if not GOOGLE_CREDENTIALS_JSON:
+    raise ValueError("Credenciais do Google não foram encontradas. Verifique se o secret 'GOOGLE_CREDENTIALS_JSON' está definido corretamente.")
+
+# Decodificar a string JSON em um dicionário de credenciais
+creds_dict = json.loads(GOOGLE_CREDENTIALS_JSON)
 
 # Configurações de autenticação para acessar a planilha Google
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-
-# Usar a string JSON armazenada na variável de ambiente
-creds_dict = json.loads(GOOGLE_API_KEY)  # Decodifica a string JSON
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
