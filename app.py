@@ -1,26 +1,25 @@
+import os
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from flask_cors import CORS
-import os  # Importando a biblioteca os para acessar variáveis de ambiente
+import json
 
 app = Flask(__name__)
 
 # Permitir CORS de qualquer origem
 CORS(app)
 
+# Carregar credenciais do Google a partir da variável de ambiente
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')  # Carrega o Secret do GitHub como variável de ambiente
+
 # Configurações de autenticação para acessar a planilha Google
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-# A chave de API deve ser lida a partir de uma variável de ambiente
-google_api_key = os.getenv('GOOGLE_API_KEY')  # Obtendo a chave da variável de ambiente
-
-# Se a chave de API for necessária para a autenticação, 
-# você deve garantir que ela seja usada corretamente aqui.
-# Caso você ainda precise do arquivo JSON para credenciais, 
-# ele deverá estar presente no seu repositório ou no ambiente onde o app é executado.
-creds = ServiceAccountCredentials.from_json_keyfile_name('copia-arquivos-para-o-gdrive-9d3fd7c778f6.json', scope)  # Substitua pelo caminho do seu arquivo JSON
+# Usar a string JSON armazenada na variável de ambiente
+creds_dict = json.loads(GOOGLE_API_KEY)  # Decodifica a string JSON
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
 @app.route('/', methods=['GET', 'POST'])
